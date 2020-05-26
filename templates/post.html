@@ -1,0 +1,55 @@
+{% extends  'base.html' %}
+
+{% block title %}
+Create a Post
+{% endblock %}
+
+{% block body %}
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <a class="navbar-brand" href="{{ url_for('index') }}">Zach Site</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('index') }}">Home</a>
+        </li>
+        {% if current_user.is_authenticated %}
+            <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('post') }}">New Post</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/logout">Logout</a>
+            </li>
+        {% endif %}
+      </ul>
+    </div>
+</nav>
+
+<main role='main' class='container'>
+    <form action="{{ url_for('post') }}" method="POST">
+        {{ form.csrf_token }}
+        <div class="form-group">
+          <label>Title</label>
+          {{ form.title(class='form-control', placeholder='Please enter a title') }}
+          <ul>
+            {% for error in form.title.errors %}
+            <li style='color:red'>{{ error }}</li>
+            {% endfor %}
+         </ul>
+        </div>
+        <div class="form-group">
+          <label>Body</label>
+          {{ form.post(class='form-control', placeholder='Please enter a Post', rows='5') }}
+          <ul>
+            {% for error in form.post.errors %}
+                <li style='color:red'>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+</main>
+
+{% endblock %}

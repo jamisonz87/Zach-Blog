@@ -1,0 +1,54 @@
+{% extends  'base.html' %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block body %}
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <a class="navbar-brand" href="{{ url_for('index') }}">Zach Site</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('index') }}">Home</a>
+        </li>
+        {% if current_user.is_authenticated %}
+            <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('post') }}">New Post</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/logout">Logout</a>
+            </li>
+        {% endif %}
+      </ul>
+    </div>
+</nav>
+
+<main role="main" class="container">
+    <div class="accordion" id="accordionExample">
+    {% for post in posts %}
+    <div class="card">
+        <div class="card-header" id="headingOne">
+        <h2 class="mb-0">
+            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#col{{post.id}}" aria-expanded="false" aria-controls="col{{post.id}}">
+            {{ post.subject }}
+            </button>
+        </h2>
+        </div>
+        <div id="col{{post.id}}" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+        <div class="card-body">
+            <h3>{{ post.subject}}</h3>
+            <small class="text-muted">By: {{ post.user_id }} Date: {{ post.post_date }}</small>
+            <br>
+            <br>
+            {{post.post }}
+        </div>
+        </div>
+    </div>
+    {% endfor %}
+    </div>
+</main>
+{% endblock %}
