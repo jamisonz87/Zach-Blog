@@ -41,7 +41,7 @@ Home
         <div id="col{{post.id}}" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
         <div class="card-body">
             <h3>{{ post.subject}}</h3>
-            <small class="text-muted">By: {{ post.user_id }} Date: {{ post.post_date }}</small>
+            <small class="text-muted">By: {{ post.user_id }} Date: {{ post.post_date.strftime('%b %d, %Y') }}</small>
             <br>
             <br>
             {{post.post }}
