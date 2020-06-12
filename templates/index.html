@@ -44,7 +44,9 @@ Home
             <small class="text-muted">By: {{ post.user_id }} Date: {{ post.post_date.strftime('%b %d, %Y') }}</small>
             <br>
             <br>
+            {% filter markdown %}
             {{post.post }}
+            {% endfilter %}
         </div>
         </div>
     </div>

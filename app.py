@@ -7,6 +7,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, TextAreaField
 from wtforms.validators import InputRequired
+from flaskext.markdown import Markdown
 
 app = Flask(__name__)
 
@@ -16,6 +17,7 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+Markdown(app)
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -27,6 +29,7 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     subject = db.Column(db.String(50))
     post = db.Column(db.String(20000))
+    mark_url = db.Column(db.String(50))
     post_date = db.Column(db.DateTime)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
@@ -36,7 +39,7 @@ class LoginForm(FlaskForm):
 
 class PostForm(FlaskForm):
     title = StringField('Enter Title', validators=[InputRequired("Please Enter a Title")])
-    post = TextAreaField('', validators=[InputRequired("Please Enter Blog")])
+    post = StringField('', validators=[InputRequired("Please Enter Url")])
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -51,8 +54,12 @@ def index():
     for p in all_posts:
         current_post = {}
         
+        content = ""
+        with open('static/markdown/{}'.format(p.mark_url), 'r') as f:
+            content = f.read()
+
         current_post['subject'] = p.subject
-        current_post['post'] = p.post
+        current_post['post'] = content
         current_post['post_date'] = p.post_date
         user = User.query.filter_by(id=p.user_id).first()
         current_post['id'] = p.id
@@ -94,12 +101,21 @@ def post():
     form = PostForm()
 
     if form.validate_on_submit():
-        new_post = Post(subject=form.title.data, post=form.post.data, post_date=datetime.now(), user_id=current_user.id)
+        new_post = Post(subject=form.title.data, mark_url=form.post.data, post_date=datetime.now(), user_id=current_user.id)
         db.session.add(new_post)
         db.session.commit()
         return redirect(url_for('index'))
 
     return render_template('post.html', form=form)
+
+'''
+@app.route('/create')
+def create():
+    new_user = User(username='', password=generate_password_hash('','sha256'))
+    db.session.add(new_user)
+    db.session.commit()
+'''
+
 
 if __name__ == '__main__':
     app.run(debug=True)
