@@ -17,7 +17,7 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-Markdown(app)
+Markdown(app, extensions=['fenced_code'])
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)

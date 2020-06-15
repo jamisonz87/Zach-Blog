@@ -1,5 +1,9 @@
 {% extends  'base.html' %}
 
+{% block link %}
+<link rel='stylesheet' href="{{ url_for('static', filename='css/codehilite.css') }}">
+{% endblock %}
+
 {% block title %}
 Home
 {% endblock %}
@@ -20,7 +24,7 @@ Home
             <a class="nav-link" href="{{ url_for('post') }}">New Post</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/logout">Logout</a>
+                <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
             </li>
         {% endif %}
       </ul>
